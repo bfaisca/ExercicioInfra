@@ -121,8 +121,8 @@ resource "azurerm_linux_virtual_machine" "vmExercicioInfra" {
     azurerm_network_interface.nicExercicioInfra.id
   ]
 
-    admin_username = "adminuser"
-    admin_password = "Password1234!"
+    admin_username = var.user
+    admin_password = var.password
     disable_password_authentication = false
 
   source_image_reference {
@@ -149,12 +149,22 @@ data "azurerm_public_ip" "ipexercicioInfradata"{
   resource_group_name = azurerm_resource_group.rg-exercicioInfra.name
 }
 
+variable "user" {
+  description = "usuário da maquina"
+  type= string 
+}
+
+variable "password"{
+ description = "senha da maquina"
+  type= string 
+}
+
 resource "null_resource" "install-webserver" {
   connection {
     type = "ssh"
     host = data.azurerm_public_ip.ipexercicioInfradata.ip_address
-    user = "adminuser"
-    password= "Password1234!"
+    user = var.user
+    password= var.password
   }
 
   provisioner "remote-exec" {
